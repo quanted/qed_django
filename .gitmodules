@@ -1,0 +1,30 @@
+[submodule "cts_app"]
+	path = cts_app
+	url = https://github.com/quanted/cts_app.git
+[submodule "cyan_app"]
+	path = cyan_app
+	url = https://github.com/quanted/cyan_app.git
+[submodule "hem_app"]
+	path = hem_app
+	url = https://github.com/quanted/hem_app.git
+[submodule "hms_app"]
+	path = hms_app
+	url = https://github.com/quanted/hms_app.git
+[submodule "hwbi_app"]
+	path = hwbi_app
+	url = https://github.com/quanted/hwbi_app.git
+[submodule "nta_app"]
+	path = nta_app
+	url = https://github.com/quanted/nta_app.git
+[submodule "pisces_app"]
+	path = pisces_app
+	url = https://github.com/quanted/pisces_app.git
+[submodule "pram_app"]
+	path = pram_app
+	url = https://github.com/quanted/pram_app.git
+[submodule "splash_app"]
+	path = splash_app
+	url = https://github.com/quanted/splash_app.git
+[submodule "wqt_app"]
+	path = wqt_app
+	url = https://github.com/quanted/wqt_app.git
