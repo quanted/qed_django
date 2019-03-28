@@ -101,8 +101,9 @@ elif HOSTNAME == "ord-uber-vm003":
     ALLOWED_HOSTS.append('qed.epa.gov')
 elif HOSTNAME == "UberTool-Dev":
     ALLOWED_HOSTS.append('172.16.0.4')
+elif "KUBE" in HOSTNAME:
+    ALLOWED_HOSTS.append('*')
 else:
-    ALLOWED_HOSTS.append('192.168.99.100')  # Docker Machine IP (generally, when using VirtualBox VM)
     ALLOWED_HOSTS.append('134.67.114.3')  # CGI NAT address (mapped to 'qed.epa.gov')
     ALLOWED_HOSTS.append('134.67.114.1')
     ALLOWED_HOSTS.append('134.67.114.5')
