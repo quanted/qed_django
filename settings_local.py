@@ -59,7 +59,6 @@ if not os.environ.get('UBERTOOL_REST_SERVER'):
     os.environ.update({'UBERTOOL_REST_SERVER': 'http://localhost:7777'})
     print("REST backend = http://localhost:7777")
 
-    # SECURITY WARNING: we keep the secret key in a shared dropbox directory
 try:
     with open('secrets/secret_key_django_dropbox.txt') as f:
         SECRET_KEY = f.read().strip()
