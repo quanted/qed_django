@@ -135,13 +135,14 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'urls'
 
+print("KUBE_ROOT: " + KUBE_ROOT)
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 try:
-    with open('secrets/secret_key_database.txt') as f:
+    with open(os.path.join(KUBE_ROOT, 'data/django-secrets/secret_key_database.txt')) as f:
         DB_PASS = f.read().strip()
 except IOError as e:
-    print("secrets/secret_key_database.txt not found!")
+    print(os.path.join(KUBE_ROOT, "data/django-secrets/secret_key_database.txt not found!"))
     DB_PASS = None
 
 DATABASES = {
@@ -159,10 +160,10 @@ DATABASES = {
     },
     'pisces_db': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'pisces',
-        'USER': 'cgifadmin',
+        'NAME': os.getenv('PISCES_DB_NAME'),
+        'USER': os.getenv('PISCES_DB_USER'),
         'PASSWORD': DB_PASS,
-        'HOST': '172.20.100.15',
+        'HOST': os.getenv('PISCES_DB_HOST'),
         'PORT': '5432',
     },
     'cyan_db': {
@@ -170,6 +171,8 @@ DATABASES = {
         'NAME': os.path.join(PROJECT_ROOT, 'cyan_app/cyan_web_app_db.sqlite3')
     }
 }
+
+print("Pisces db - user: {}, name: {}, host: {}".format(os.getenv('PISCES_DB_USER'), os.getenv('PISCES_DB_NAME'), os.getenv('PISCES_DB_HOST')))
 
 DATABASE_ROUTERS = {'routers.HemRouter',
                     'routers.HwbiRouter',
@@ -259,7 +262,7 @@ if not os.environ.get('UBERTOOL_REST_SERVER'):
     print("REST backend = http://localhost:7777")
 
 try:
-    with open('secrets/secret_key_django_dropbox.txt') as f:
+    with open(os.path.join(KUBE_ROOT, 'data/django-secrets/secret_key_django_dropbox.txt')) as f:
         SECRET_KEY = f.read().strip()
 except IOError as e:
     print("Could not find secret file")
@@ -272,6 +275,7 @@ except IOError as e:
         str(MACHINE_IP)
     ]
     print("ALLOWED_HOSTS: {}".format(str(ALLOWED_HOSTS)))
+
 
 #IS_PUBLIC = True
 IS_PUBLIC = False
