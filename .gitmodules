@@ -28,3 +28,6 @@
 [submodule "wqt_app"]
 	path = wqt_app
 	url = https://github.com/quanted/wqt_app.git
+[submodule "temp_config"]
+	path = temp_config
+	url = https://github.com/quanted/temp_config
