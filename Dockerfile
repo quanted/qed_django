@@ -25,7 +25,7 @@ RUN pip freeze | grep Django
 #RUN pip install matplotlib
 
 # Specific Docker-specific Django settings file (needed for collectstatic)
-ENV DJANGO_SETTINGS_MODULE="settings_kube"
+ENV DJANGO_SETTINGS_MODULE="settings_docker"
 
 # Add project root to PYTHONPATH (needed to import custom Django settings)
 ENV PYTHONPATH="/src"
