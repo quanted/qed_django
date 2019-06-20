@@ -1,7 +1,7 @@
 from django.core.management import execute_from_command_line
 import os
 import sys
-from set_environment import DeployEnv
+from temp_config.set_environment import DeployEnv
 # from temp_config.set_environment import DeployEnv
 
 
