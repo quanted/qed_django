@@ -84,8 +84,6 @@ except IOError as e:
 #    print("No IP address given")
 #    IP_ADDRESS = '0.0.0.0'
 
-
-
 ALLOWED_HOSTS = []
 if HOSTNAME == "ord-uber-vm003":
     IS_PUBLIC = True
@@ -112,6 +110,12 @@ else:
     ALLOWED_HOSTS.append('172.20.100.15')
     ALLOWED_HOSTS.append('qedinternal.epa.gov')
     ALLOWED_HOSTS.append('qed.epa.gov')
+
+local_docker = os.environ.get("LOCAL_DOCKER")
+if local_docker == 'True':
+    ALLOWED_HOSTS.append('*')
+    print("WARNING: Allowed hosts includes '*', should only be used in secure testing environment.")
+
 
 print("MACHINE_ID = {}".format(MACHINE_ID))
 print("HOSTNAME = {}".format(HOSTNAME))
