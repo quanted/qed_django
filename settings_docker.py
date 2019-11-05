@@ -112,7 +112,8 @@ else:
     ALLOWED_HOSTS.append('qed.epa.gov')
 
 local_docker = os.environ.get("LOCAL_DOCKER")
-if local_docker == 'True':
+print("LOCAL_DOCKER = {}".format(local_docker))
+if local_docker == "True":
     ALLOWED_HOSTS.append('*')
     print("WARNING: Allowed hosts includes '*', should only be used in secure testing environment.")
 
