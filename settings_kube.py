@@ -10,7 +10,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 import socket
-from .settings import *
+from settings import *
 
 
 print('settings_kube.py')
