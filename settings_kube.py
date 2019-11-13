@@ -10,10 +10,10 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 import socket
+from .settings import *
+
 
 print('settings_kube.py')
-
-MACHINE_ID = "developer"
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 KUBE_ROOT = os.path.abspath(os.path.dirname(__file__)).replace("qed_django", "")
@@ -26,7 +26,6 @@ MACHINE_ID = "developer"
 # cts_api addition:
 NODEJS_HOST = 'nginx'  # default nodejs hostname
 NODEJS_PORT = 80  # default nodejs port
-# todo: look into ws w/ django 1.10
 
 if not os.environ.get('IS_PUBLIC'):
     DEBUG = True
@@ -43,6 +42,7 @@ ADMINS = (
     ('Dave Lyons', 'lyons.david@epa.gov'),
     ('Tom Purucker', 'purucker.tom@epa.gov'),
     ('Kurt Wolfe', 'wolfe.kurt@epa.gov'),
+    ('Deron Smith', 'smith.deron@epa.gov'),
     ('Nick Pope', 'i.nickpope@gmail.com'),  # non-epa email ok?
 )
 
@@ -127,7 +127,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    #'django.contrib.messages.middleware.MessageMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -214,6 +214,7 @@ STATICFILES_FINDERS = (
 )
 
 STATIC_URL = '/static_qed/'
+STATIC_ROOT = '/static_qed/'
 print('PROJECT_ROOT = {0!s}'.format(PROJECT_ROOT))
 print('TEMPLATE_ROOT = {0!s}'.format(TEMPLATE_ROOT))
 
@@ -269,13 +270,12 @@ except IOError as e:
     down_low = 'Shhhhhhhhhhhhhhh'
     SECRET_KEY = down_low
 
-    ALLOWED_HOSTS = [
-        'localhost',
-        '127.0.0.1',
-        str(MACHINE_IP)
-    ]
-    print("ALLOWED_HOSTS: {}".format(str(ALLOWED_HOSTS)))
-
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+     str(MACHINE_IP)
+]
+print("ALLOWED_HOSTS: {}".format(str(ALLOWED_HOSTS)))
 
 #IS_PUBLIC = True
 IS_PUBLIC = False
@@ -288,6 +288,7 @@ LOGIN_URL = '/ubertool/login'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Log to console in Debug mode
+DEBUG = True
 if DEBUG:
     import logging
     logging.basicConfig(
