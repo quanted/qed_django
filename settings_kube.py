@@ -10,7 +10,13 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 import socket
-from settings import *
+from temp_config.set_environment import DeployEnv
+
+SERVER_NAME = os.getenv("SERVER_NAME")
+print("SERVER_NAME: {}".format(SERVER_NAME))
+# Determine env vars to use:
+runtime_env = DeployEnv()
+runtime_env.load_deployment_environment()
 
 
 print('settings_kube.py')
@@ -27,14 +33,14 @@ MACHINE_ID = "developer"
 NODEJS_HOST = 'nginx'  # default nodejs hostname
 NODEJS_PORT = 80  # default nodejs port
 
-if not os.environ.get('IS_PUBLIC'):
-    DEBUG = True
-else:
-    if os.environ.get('IS_PUBLIC') == "True":
-        DEBUG = False
-    else:
-        DEBUG = True
-print("DEBUG: " + str(DEBUG))
+# if not os.environ.get('IS_PUBLIC'):
+#     DEBUG = True
+# else:
+#     if os.environ.get('IS_PUBLIC') == "True":
+#         DEBUG = False
+#     else:
+#         DEBUG = True
+# print("DEBUG: " + str(DEBUG))
 IS_PUBLIC = False
 IS_DEVELOPMENT = True
 
@@ -214,7 +220,6 @@ STATICFILES_FINDERS = (
 )
 
 STATIC_URL = '/static_qed/'
-STATIC_ROOT = '/static_qed/'
 print('PROJECT_ROOT = {0!s}'.format(PROJECT_ROOT))
 print('TEMPLATE_ROOT = {0!s}'.format(TEMPLATE_ROOT))
 
@@ -256,7 +261,7 @@ os.environ.update({
 # SECURITY WARNING: don't run with debug turned on in production!
 TEMPLATE_DEBUG = False
 CSRF_USE_SESSIONS = False
-
+#
 if not os.environ.get('UBERTOOL_REST_SERVER'):
     # Local REST server within epa intranet
     os.environ.update({'UBERTOOL_REST_SERVER': 'http://localhost:7777'})
@@ -277,8 +282,6 @@ ALLOWED_HOSTS = [
 ]
 print("ALLOWED_HOSTS: {}".format(str(ALLOWED_HOSTS)))
 
-#IS_PUBLIC = True
-IS_PUBLIC = False
 
 WSGI_APPLICATION = 'wsgi_local.application'
 
