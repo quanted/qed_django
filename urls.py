@@ -15,35 +15,29 @@ print('qed.urls')
 print("IS_PUBLIC: " + str(os.environ.get('IS_PUBLIC')))
 
 # appends to the list of url patterns to check against
-# if settings.IS_PUBLIC:
-# if _is_public:
 # Storing env vars in os.environ are strings only...
 if os.environ.get('IS_PUBLIC') == "True":
     urlpatterns = [
         path('', include('splash_app.urls')),
         path('cts/', include('cts_app.urls')),
-        # path('cyan/', include('cyan_app.urls')),
+        path('hms/', include('hms_app.urls')),
         path('login/', login_middleware.login),
+        path('nta/', include('nta_app.urls')),
         path('pisces/', include('pisces_app.urls')),
         path('pram/', include('pram_app.urls')),
-        # path('ubertool/', include('ubertool_app.urls')),
-        # re_path(r'^(?s).*', landing.page_404)
     ]
 else:
+    # not public (dev, staging, etc.)
     urlpatterns = [
-
         path('', include('splash_app.urls')),
         path('cts/', include('cts_app.urls')),
         path('cyan/', include('cyan_app.urls')),
         path('hms/', include('hms_app.urls')),
-        # path('hem/', include('hem_app.urls')),
         path('hwbi/', include('hwbi_app.urls')),
+        path('nta/', include('nta_app.urls')),
         path('pisces/', include('pisces_app.urls')),
         path('pram/', include('pram_app.urls')),
-        path('nta/', include('nta_app.urls'))
-        # path('ubertool/', include('ubertool_app.urls')),
-        # re_path(r'^(?s).*', landing.file_not_found, )
-        # re_path(r'^(?s).*', landing.page_404)
+        path('login/', login_middleware.login),
     ]
 
 if settings.IS_PUBLIC:
