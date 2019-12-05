@@ -282,12 +282,11 @@ ALLOWED_HOSTS = [
 ]
 print("ALLOWED_HOSTS: {}".format(str(ALLOWED_HOSTS)))
 
-
 WSGI_APPLICATION = 'wsgi_local.application'
 
 # Authentication
 AUTH = False
-LOGIN_URL = '/ubertool/login'
+# LOGIN_URL = '/ubertool/login'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Log to console in Debug mode
@@ -299,3 +298,14 @@ if DEBUG:
         format = '%(asctime)s %(levelname)s %(message)s',
     )
 
+if os.environ.get('PASSWORD_REQUIRED') == "True":
+    logging.warning("Password protection enabled")
+    MIDDLEWARE += ['login_middleware.RequireLoginMiddleware','django.contrib.messages.middleware.MessageMiddleware',]
+    AUTH = True
+    # DEBUG = False
+
+REQUIRE_LOGIN_PATH = '/login/'
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# Public apps:
+PUBLIC_APPS = ['cts', 'hms', 'pram']
