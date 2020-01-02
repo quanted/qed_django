@@ -166,18 +166,18 @@ DATABASES = {
         'NAME': os.path.join(PROJECT_ROOT, 'hwbi_app/hwbi_db_v2.sqlite3'),
     },
     'pisces_db': {
-        # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        # 'NAME': os.getenv('PISCES_DB_NAME'),
-        # 'USER': os.getenv('PISCES_DB_USER'),
-        # 'PASSWORD': DB_PASS,
-        # 'HOST': os.getenv('PISCES_DB_HOST'),
-        # 'PORT': '5432',
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'pisces',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'localhost',
+        'NAME': os.getenv('PISCES_DB_NAME'),
+        'USER': os.getenv('PISCES_DB_USER'),
+        'PASSWORD': DB_PASS,
+        'HOST': os.getenv('PISCES_DB_HOST'),
         'PORT': '5432',
+        # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        # 'NAME': 'pisces',
+        # 'USER': 'postgres',
+        # 'PASSWORD': 'postgres',
+        # 'HOST': 'localhost',
+        # 'PORT': '5432',
     },
     'cyan_db': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -285,8 +285,10 @@ except IOError as e:
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-     str(MACHINE_IP)
+    str(MACHINE_IP)
 ]
+
+ALLOWED_HOSTS.append('*')
 print("ALLOWED_HOSTS: {}".format(str(ALLOWED_HOSTS)))
 
 WSGI_APPLICATION = 'wsgi_local.application'
