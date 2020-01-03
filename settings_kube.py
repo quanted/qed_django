@@ -152,7 +152,7 @@ if os.path.exists(secrets_path1):
     s_path = secrets_path1
 else:
     s_path = secrets_path2
-    
+
 try:
     with open(s_path) as f:
         DB_PASS = f.read().strip()
@@ -283,11 +283,17 @@ if not os.environ.get('UBERTOOL_REST_SERVER'):
     os.environ.update({'UBERTOOL_REST_SERVER': 'http://localhost:7777'})
     print("REST backend = http://localhost:7777")
 
+d_secret1 = os.path.join(KUBE_ROOT, 'data/django-secrets/secret_key_django_dropbox.txt')
+d_secret2 = os.path.join(KUBE_ROOT, 'secrets/secret_key_django_dropbox.txt')
+if os.path.exists(d_secret1):
+    d_path = d_secret1
+else:
+    d_path = d_secret2
 try:
-    with open(os.path.join(KUBE_ROOT, 'data/django-secrets/secret_key_django_dropbox.txt')) as f:
+    with open(d_path) as f:
         SECRET_KEY = f.read().strip()
 except IOError as e:
-    print("Could not find secret file")
+    print("Could not find secret file: {}".format(d_path))
     down_low = 'Shhhhhhhhhhhhhhh'
     SECRET_KEY = down_low
 
