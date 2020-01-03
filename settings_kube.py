@@ -145,12 +145,21 @@ ROOT_URLCONF = 'urls'
 print("KUBE_ROOT: " + KUBE_ROOT)
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
+secrets_path1 = os.path.join(KUBE_ROOT, 'data/django-secrets/secret_key_database.txt')
+secrets_path2 = os.path.join(KUBE_ROOT, 'secrets/secret_key_database.txt')
+
+if os.path.exists(secrets_path1):
+    s_path = secrets_path1
+else:
+    s_path = secrets_path2
+    
 try:
-    with open(os.path.join(KUBE_ROOT, 'data/django-secrets/secret_key_database.txt')) as f:
+    with open(s_path) as f:
         DB_PASS = f.read().strip()
 except IOError as e:
-    print(os.path.join(KUBE_ROOT, "data/django-secrets/secret_key_database.txt not found!"))
+    print("{} not found!".format(s_path))
     DB_PASS = None
+
 
 DATABASES = {
     'default': {
