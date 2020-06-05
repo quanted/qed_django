@@ -42,9 +42,12 @@ class RequireLoginMiddleware:
         self.hms_protected = ["hydrology", "workflow", "meteorology"]
         self.hms_public = [
             "workflow/precip_data_extraction/",
-            "workflow/precip_compare",
-            "meteorology/precipitation",
+            "workflow/precip_compare/",
+            "meteorology/precipitation/",
             "hydrology/evapotranspiration/"
+        ]
+        self.open_endpoints = [
+            "rest/api/"
         ]
         self.load_passwords()
 
@@ -143,6 +146,8 @@ class RequireLoginMiddleware:
 		password wall. Returns True if path has app name
 		in it that needs password protected.
 		"""
+        if any(p in path for p in self.open_endpoints):
+            return False
         for app in self.apps_with_password:
             if app in path and "hms" in app:
                 if any(hms_app in path for hms_app in self.hms_protected):
