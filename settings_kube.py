@@ -326,7 +326,8 @@ if os.environ.get('PASSWORD_REQUIRED') == "True":
         'login_middleware.Http403Middleware',
         'login_middleware.RequireLoginMiddleware',
         'django.contrib.messages.middleware.MessageMiddleware',
-    ]    AUTH = True
+    ]
+    AUTH = True
     # DEBUG = False
 
 REQUIRE_LOGIN_PATH = '/login/'
