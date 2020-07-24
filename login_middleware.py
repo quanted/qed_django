@@ -39,7 +39,6 @@ class RequireLoginMiddleware:
     """
     Require Login middleware. If enabled, each Django-powered page will
     require authentication.
-
     If an anonymous user requests a page, he/she is redirected to the login
     page set by REQUIRE_LOGIN_PATH or /accounts/login/ by default.
     """

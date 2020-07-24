@@ -1,9 +1,7 @@
 """
 Django settings for qed splash page.
-
 For more information on this file, see
 https://docs.djangoproject.com/en/1.10/topics/settings/
-
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
@@ -324,8 +322,11 @@ if DEBUG:
 
 if os.environ.get('PASSWORD_REQUIRED') == "True":
     logging.warning("Password protection enabled")
-    MIDDLEWARE += ['login_middleware.RequireLoginMiddleware','django.contrib.messages.middleware.MessageMiddleware',]
-    AUTH = True
+    MIDDLEWARE += [
+        'login_middleware.Http403Middleware',
+        'login_middleware.RequireLoginMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+    ]    AUTH = True
     # DEBUG = False
 
 REQUIRE_LOGIN_PATH = '/login/'
