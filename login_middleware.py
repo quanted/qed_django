@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
+from django.http import HttpResponseForbidden
 import re
 import os
 import logging
@@ -22,14 +23,25 @@ hms_public = [
 ]
 
 
+class Http403Middleware(object):
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        if HttpResponseForbidden.status_code == response.status_code:
+            return login(request, "<span style='color:red;'>Your session has timed out, please log back in to refresh your session.</span>")
+        else:
+            return response
+
+
 class RequireLoginMiddleware:
     """
-	Require Login middleware. If enabled, each Django-powered page will
-	require authentication.
-
-	If an anonymous user requests a page, he/she is redirected to the login
-	page set by REQUIRE_LOGIN_PATH or /accounts/login/ by default.
-	"""
+    Require Login middleware. If enabled, each Django-powered page will
+    require authentication.
+    If an anonymous user requests a page, he/she is redirected to the login
+    page set by REQUIRE_LOGIN_PATH or /accounts/login/ by default.
+    """
 
     def __init__(self, get_response):
         self.get_response = get_response
@@ -38,7 +50,7 @@ class RequireLoginMiddleware:
         self.hms_admin = "hmsadmin"
         self.hms_username = "hmsuser"
         self.hashed_pass = {}  # dictionary of user:passwords
-        self.apps_with_password = ["hms", "pram", "cts/biotrans", "cts/stress"]
+        self.apps_with_password = ["hms", "pram", "cts/biotrans", "cts/stress", "cyanweb"]
         self.hms_protected = ["hydrology", "workflow", "meteorology"]
         self.hms_public = [
             "workflow/precip_data_extraction/",
@@ -46,6 +58,10 @@ class RequireLoginMiddleware:
             "meteorology/precipitation",
             "hydrology/evapotranspiration/"
         ]
+        self.open_endpoints = [
+            "rest/api/"
+        ]
+        self.set_password_via_config()
         self.load_passwords()
 
     def __call__(self, request):
@@ -54,9 +70,9 @@ class RequireLoginMiddleware:
 
     def load_passwords(self):
         """
-		Loads passwords for each user from the secrets file.
-		:return:
-		"""
+        Loads passwords for each user from the secrets file.
+        :return:
+        """
         for a in self.apps_with_password:
             if "hms" in a:
                 self.hashed_pass["hms_public"] = self.get_hashed_password("secret_key_hms.txt")
@@ -65,12 +81,26 @@ class RequireLoginMiddleware:
                 self.hashed_pass["qed"] = self.get_hashed_password("secret_key_login.txt")
             elif "cts" in a:
                 self.hashed_pass["qed"] = self.get_hashed_password("secret_key_login.txt")
+            elif "cyanweb" in a:
+                self.hashed_pass["qed"] = self.get_hashed_password("secret_key_login.txt")
+
+    def set_password_via_config(self):
+        """
+        Modifies apps_with_password list based on deployment environment.
+        Used for fine-tuning passwords on apps on a server-by-server basis.
+        """
+        env_name = os.environ.get('ENV_NAME')
+        if not env_name:
+            return
+        if env_name == 'gdit_aws_dev':
+            if "cts" not in self.apps_with_password:
+                self.apps_with_password.append("cts")  # adds password for all of cts on gdit aws dev server
 
     def get_hashed_password(self, filename):
         """
-		Reads file where hashed pass is stored (.gitignored).
-		filename - name of hased pass file, with extension (e.g., secret_key.txt).
-		"""
+        Reads file where hashed pass is stored (.gitignored).
+        filename - name of hased pass file, with extension (e.g., secret_key.txt).
+        """
         try:
             _hash_pass = open(os.path.join(PROJECT_ROOT, 'secrets', filename), 'r')  # read in hashed password from file
             return _hash_pass.read().encode('utf-8')  # encode for bcrypt
@@ -80,8 +110,8 @@ class RequireLoginMiddleware:
 
     def check_authentication(self, request, access_type="qed"):
         """
-		Checks access based on username and requested url.
-		"""
+        Checks access based on username and requested url.
+        """
         current_user = request.user  # current user object
 
         if access_type == "qed":
@@ -113,6 +143,7 @@ class RequireLoginMiddleware:
         redirect_path = request.POST.get('next', "")
         user = request.POST.get('user')
         has_access = False
+        token = request.GET.get('token')  # potential 'token' query for cyano-web password reset
 
         if not self.needs_qed_password(path + redirect_path):
             return
@@ -131,6 +162,8 @@ class RequireLoginMiddleware:
 
         if not self.login_url.match(path):
             # Returns login page:
+            if token:
+                return redirect('{}?next={}?token={}'.format(settings.REQUIRE_LOGIN_PATH, path, token))
             return redirect('{}?next={}'.format(settings.REQUIRE_LOGIN_PATH, path))
 
         if request.POST and self.login_url.match(path):
@@ -139,10 +172,12 @@ class RequireLoginMiddleware:
 
     def needs_qed_password(self, path):
         """
-		Checks requested path against apps that need a
-		password wall. Returns True if path has app name
-		in it that needs password protected.
-		"""
+        Checks requested path against apps that need a
+        password wall. Returns True if path has app name
+        in it that needs password protected.
+        """
+        if any(p in path for p in self.open_endpoints):
+            return False
         for app in self.apps_with_password:
             if app in path and "hms" in app:
                 if any(hms_app in path for hms_app in self.hms_protected):
@@ -190,6 +225,10 @@ class RequireLoginMiddleware:
         password = request.POST.get('password')
         next_page = request.POST.get('next')
 
+        if self.hashed_pass is None:
+            self.set_password_via_config()
+            self.load_passwords()
+
         # redirect if hashed pw unable to be set, or user didn't enter password:
         if not self.hashed_pass or not password:
             return redirect('/login?next={}'.format(next_page))
@@ -232,7 +271,7 @@ class RequireLoginMiddleware:
 ################################ User Login Pages #####################################
 #######################################################################################
 
-def login(request):
+def login(request, message=""):
     next_page = request.GET.get('next')
 
     login_text = "<h3>Enter QED credentials to continue</h3>"
@@ -254,7 +293,7 @@ def login(request):
     html += render_to_string('03epa_drupal_section_title_splash.html', {})
     html += render_to_string('06ubertext_start_index_drupal.html', {
         'TITLE': 'User Login',
-        'TEXT_PARAGRAPH': ""
+        'TEXT_PARAGRAPH': message
     })
     html += render_to_string('07ubertext_end_drupal.html', {})
     html += render_to_string('login_prompt.html', {'next': next_page, 'text': login_text}, request=request)
