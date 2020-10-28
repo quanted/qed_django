@@ -1,17 +1,15 @@
 # qed_py3 is debian linux with buildpack-deps
 # updated with all needed qed python dependencies
-# Use 'version' ARG for grabbing correct qed_py3 base image.
-# Defaults to 'latest' if not set.
-ARG version=dev
-FROM quanted/qed_py3:$version
-
-# Install Python Dependencies
-COPY . /src/
+# lite version contains no GDAL or anaconda installation
+FROM quanted/qed_py3:lite
 
 # Overwrite the uWSGI config
 COPY uwsgi.ini /etc/uwsgi/
 
 # Copy the project code
+RUN mkdir /src
+COPY docker_start.sh /src/docker_start.sh
+
 WORKDIR /src
 EXPOSE 8080
 
