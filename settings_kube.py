@@ -233,6 +233,8 @@ STATICFILES_FINDERS = (
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static_qed')
+
 STATIC_URL = '/static_qed/'
 print('PROJECT_ROOT = {0!s}'.format(PROJECT_ROOT))
 print('TEMPLATE_ROOT = {0!s}'.format(TEMPLATE_ROOT))
