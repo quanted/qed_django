@@ -17,7 +17,7 @@ SERVER_NAME = os.getenv("SERVER_NAME")
 print("SERVER_NAME: {}".format(SERVER_NAME))
 
 os.environ['UBERTOOL_REST_SERVER'] = 'http://qed_nginx:7777'
-print("FLASK SERVER: {}".format(os.environ.get("UBERTOOL_REST_SERVER"))
+print("FLASK SERVER: {}".format(os.environ.get("UBERTOOL_REST_SERVER")))
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 KUBE_ROOT = os.path.abspath(os.path.dirname(__file__)).replace("qed_django", "")
