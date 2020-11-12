@@ -13,14 +13,8 @@ from temp_config.set_environment import DeployEnv
 
 SERVER_NAME = os.getenv("SERVER_NAME")
 print("SERVER_NAME: {}".format(SERVER_NAME))
-# Determine env vars to use:
-runtime_env = DeployEnv()
-runtime_env.load_deployment_environment()
 
-if not os.environ.get('UBERTOOL_REST_SERVER'):
-    # Docker network
-    os.environ.update({'UBERTOOL_REST_SERVER': 'http://qed_nginx:7777'})
-    print("REST backend = http://qed_nginx:7777")
+os.environ.update({'UBERTOOL_REST_SERVER': 'http://qed_nginx:7777'})
 
 print('settings_kube.py')
 for key, val in os.environ.items():
@@ -336,3 +330,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Public apps:
 PUBLIC_APPS = ['cts', 'hms', 'pram']
+
+# Determine env vars to use:
+runtime_env = DeployEnv()
+runtime_env.load_deployment_environment()
