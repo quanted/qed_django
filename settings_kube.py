@@ -11,12 +11,14 @@ import socket
 import logging
 from temp_config.set_environment import DeployEnv
 
+print('settings_kube.py')
+
 SERVER_NAME = os.getenv("SERVER_NAME")
 print("SERVER_NAME: {}".format(SERVER_NAME))
 
-os.environ.update({'UBERTOOL_REST_SERVER': 'http://qed_nginx:7777'})
+os.environ['UBERTOOL_REST_SERVER'] = 'http://qed_nginx:7777'
+print("FLASK SERVER: {}".format(os.environ.get("UBERTOOL_REST_SERVER"))
 
-print('settings_kube.py')
 for key, val in os.environ.items():
     logging.info("QED DJANGO ENV VAR: {}: {}".format(key, val))
 
