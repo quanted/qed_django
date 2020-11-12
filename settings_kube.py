@@ -16,8 +16,14 @@ print("SERVER_NAME: {}".format(SERVER_NAME))
 runtime_env = DeployEnv()
 runtime_env.load_deployment_environment()
 
+if not os.environ.get('UBERTOOL_REST_SERVER'):
+    # Docker network
+    os.environ.update({'UBERTOOL_REST_SERVER': 'http://qed_nginx:7777'})
+    print("REST backend = http://qed_nginx:7777")
 
 print('settings_kube.py')
+for key, val in os.environ.items():
+    logging.info("QED DJANGO ENV VAR: {}: {}".format(key, val))
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 KUBE_ROOT = os.path.abspath(os.path.dirname(__file__)).replace("qed_django", "")
@@ -31,14 +37,6 @@ MACHINE_ID = "developer"
 NODEJS_HOST = 'nginx'  # default nodejs hostname
 NODEJS_PORT = 80  # default nodejs port
 
-# if not os.environ.get('IS_PUBLIC'):
-#     DEBUG = True
-# else:
-#     if os.environ.get('IS_PUBLIC') == "True":
-#         DEBUG = False
-#     else:
-#         DEBUG = True
-# print("DEBUG: " + str(DEBUG))
 IS_PUBLIC = False
 IS_DEVELOPMENT = True
 
@@ -222,10 +220,10 @@ USE_TZ = True
 
 CYAN_ANGULAR_APP_DIR = "static_qed/cyan/webapp"
 
-STATICFILES_DIRS = (
-    os.path.join(KUBE_ROOT, 'static_qed'),
-    #os.path.join(KUBE_ROOT, CYAN_ANGULAR_APP_DIR)
-)
+#STATICFILES_DIRS = (
+#    os.path.join(KUBE_ROOT, 'static_qed'),
+#    #os.path.join(KUBE_ROOT, CYAN_ANGULAR_APP_DIR)
+#)
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -233,7 +231,7 @@ STATICFILES_FINDERS = (
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-# STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static_qed')
+STATIC_ROOT = os.path.join(KUBE_ROOT, 'static_qed')
 
 STATIC_URL = '/static_qed/'
 print('PROJECT_ROOT = {0!s}'.format(PROJECT_ROOT))
