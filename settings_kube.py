@@ -224,7 +224,7 @@ CYAN_ANGULAR_APP_DIR = "static_qed/cyan/webapp"
 
 STATICFILES_DIRS = (
     os.path.join(KUBE_ROOT, 'static_qed'),
-    os.path.join(KUBE_ROOT, CYAN_ANGULAR_APP_DIR)
+    #os.path.join(KUBE_ROOT, CYAN_ANGULAR_APP_DIR)
 )
 
 STATICFILES_FINDERS = (
@@ -233,7 +233,7 @@ STATICFILES_FINDERS = (
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static_qed')
+# STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static_qed')
 
 STATIC_URL = '/static_qed/'
 print('PROJECT_ROOT = {0!s}'.format(PROJECT_ROOT))
