@@ -17,8 +17,8 @@ EXPOSE 8080
 RUN chmod 755 /src/docker_start.sh
 RUN pip freeze | grep Django
 
-RUN conda install -c conda-forge scipy
-RUN conda install -c conda-forge numpy
+RUN pip install scipy
+RUN pip install numpy
 
 # Specific Docker-specific Django settings file (needed for collectstatic)
 ENV DJANGO_SETTINGS_MODULE="settings_docker"
