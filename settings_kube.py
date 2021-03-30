@@ -12,6 +12,20 @@ import logging
 from temp_config.set_environment import DeployEnv
 
 print('settings_kube.py')
+IN_PROD = (os.getenv("IN_PROD") == "1")
+print("Production Deployment: {}".format(IN_PROD))
+if IN_PROD:
+    DEBUG = False
+    IS_PUBLIC = True
+    CORS_ORIGIN_ALLOW_ALL = False
+    PUBLIC_APPS = ['cts', 'hms', 'pisces']
+    PASSWORD_REQUIRED = False
+    os.environ.update({'HMS_RELEASE': 'True'})
+else:
+    DEBUG = True
+    IS_PUBLIC = False
+    CORS_ORIGIN_ALLOW_ALL = True
+    PUBLIC_APPS = ['cts', 'hms', 'pisces', 'cyan', 'pram']
 
 SERVER_NAME = os.getenv("SERVER_NAME")
 print("SERVER_NAME: {}".format(SERVER_NAME))
