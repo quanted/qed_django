@@ -12,7 +12,7 @@ import logging
 from temp_config.set_environment import DeployEnv
 
 print('settings_kube.py')
-IN_PROD = (os.getenv("IN_PROD") == "1")
+IN_PROD = (os.getenv("IN_PROD", "0") == "1")
 print("Production Deployment: {}".format(IN_PROD))
 if IN_PROD:
     DEBUG = False
