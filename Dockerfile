@@ -1,7 +1,7 @@
 # qed_py3 is debian linux with buildpack-deps
 # updated with all needed qed python dependencies
 # lite version contains no GDAL or anaconda installation
-FROM quanted/qed_py3:lite
+FROM quanted/qed_py3:lite-3.8
 
 # Overwrite the uWSGI config
 COPY uwsgi.ini /etc/uwsgi/
@@ -15,16 +15,12 @@ EXPOSE 8080
 
 # Ensure "docker_start" is executable
 RUN chmod 755 /src/docker_start.sh
-RUN pip freeze | grep Django
-
-RUN pip install scipy
-RUN pip install numpy
 
 # Specific Docker-specific Django settings file (needed for collectstatic)
 ENV DJANGO_SETTINGS_MODULE="settings_docker"
 
 # Add project root to PYTHONPATH (needed to import custom Django settings)
-ENV PYTHONPATH="/src"
+ENV PYTHONPATH /opt/conda/envs/pyenv:/src:$PYTHONPATH
 
 # ENTRYPOINT ["sh /src/docker_start.sh"]
-CMD ["sh", "/src/docker_start.sh"]
+CMD ["conda", "run", "-n", "pyenv", "--no-capture-output", "sh", "/src/docker_start.sh"]
