@@ -20,7 +20,7 @@ RUN chmod 755 /src/docker_start.sh
 ENV DJANGO_SETTINGS_MODULE="settings_docker"
 
 # Add project root to PYTHONPATH (needed to import custom Django settings)
-ENV PYTHONPATH /opt/conda/envs/pyenv:/src:$PYTHONPATH
+ENV PYTHONPATH /src:$PYTHONPATH
 
 # ENTRYPOINT ["sh /src/docker_start.sh"]
-CMD ["conda", "run", "-n", "pyenv", "--no-capture-output", "sh", "/src/docker_start.sh"]
+CMD [ "sh", "/src/docker_start.sh"]
