@@ -147,6 +147,20 @@ CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'urls'
 
 print("KUBE_ROOT: " + KUBE_ROOT)
+# Django Secrets
+secrets_path1 = os.path.join(KUBE_ROOT, 'data/django-secrets/secret_key_django_dropbox.txt')
+secrets_path2 = os.path.join(KUBE_ROOT, 'secrets/secret_key_django_dropbox.txt')
+if os.path.exists(secrets_path1):
+    s_path = secrets_path1
+else:
+    s_path = secrets_path2
+try:
+    with open(s_path) as f:
+        SECRET_KEY = f.read().strip()
+except IOError as e:
+    print("{} not found!".format(s_path))
+    SECRET_KEY = ""
+
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 secrets_path1 = os.path.join(KUBE_ROOT, 'data/django-secrets/secret_key_database.txt')
