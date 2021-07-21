@@ -89,7 +89,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-
             ],
         },
     },
@@ -154,6 +153,7 @@ if os.path.exists(secrets_path1):
     s_path = secrets_path1
 else:
     s_path = secrets_path2
+print(f"SECRETS PATH: {s_path}")
 try:
     with open(s_path) as f:
         SECRET_KEY = f.read().strip()
@@ -170,7 +170,7 @@ if os.path.exists(secrets_path1):
     s_path = secrets_path1
 else:
     s_path = secrets_path2
-
+print(f"DB_PASS PATH: {s_path}")
 try:
     with open(s_path) as f:
         DB_PASS = f.read().strip()
