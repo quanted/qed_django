@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import os
 import socket
 import logging
-from temp_config import DeployEnv
+# from temp_config import DeployEnv
 
 print('settings_kube.py')
 IN_PROD = (os.getenv("IN_PROD", "0") == "1")
@@ -344,5 +344,5 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 PUBLIC_APPS = ['cts', 'hms', 'pram']
 
 # Determine env vars to use:
-runtime_env = DeployEnv()
-runtime_env.load_deployment_environment()
+# runtime_env = DeployEnv()
+# runtime_env.load_deployment_environment()
