@@ -9,11 +9,25 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import os
 import socket
 import logging
-# from temp_config import DeployEnv
+from temp_config.set_environment import DeployEnv
+
 
 print('settings_kube.py')
+
+ENV_CHECK = (os.getenv("ENV_NAME", "") == "kube_dev")
+if not ENV_CHECK:
+    print("Running deployment env setup from settings_kube.py")
+    runtime_env = DeployEnv()
+    runtime_env.load_deployment_environment()
+
 IN_PROD = (os.getenv("IN_PROD", "0") == "1")
+
+GL_AWS = (os.getenv("GL_AWS", "0") == "1")
+print(f"GitLab AWS: {GL_AWS}")
+if GL_AWS:
+    IN_PROD = True
 print("Production Deployment: {}".format(IN_PROD))
+
 if IN_PROD:
     DEBUG = False
     IS_PUBLIC = True
