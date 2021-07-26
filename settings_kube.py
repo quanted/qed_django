@@ -27,7 +27,7 @@ print(f"GitLab AWS: {GL_AWS}")
 if GL_AWS:
     IN_PROD = True
 print("Production Deployment: {}".format(IN_PROD))
-SECRET_KEY = os.getenv('SECRET_KEY', "needtosetthesecretkey")
+
 
 if IN_PROD:
     DEBUG = False
@@ -316,6 +316,9 @@ except IOError as e:
     print("Could not find secret file: {}".format(d_path))
     down_low = 'Shhhhhhhhhhhhhhh'
     SECRET_KEY = down_low
+
+if SECRET_KEY == "" or SECRET_KEY is None:
+    SECRET_KEY = os.getenv('SECRET_KEY', "needtosetthesecretkey")
 
 ALLOWED_HOSTS = [
     'localhost',
