@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import logging
 from temp_config.set_environment import DeployEnv
 
 # Determine env vars to use:
