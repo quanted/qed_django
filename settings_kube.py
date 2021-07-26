@@ -27,6 +27,7 @@ print(f"GitLab AWS: {GL_AWS}")
 if GL_AWS:
     IN_PROD = True
 print("Production Deployment: {}".format(IN_PROD))
+SECRET_KEY = os.getenv('SECRET_KEY', "needtosetthesecretkey")
 
 if IN_PROD:
     DEBUG = False
