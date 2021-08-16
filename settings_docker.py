@@ -88,7 +88,7 @@ except IOError as e:
 
 ALLOWED_HOSTS = []
 
-if IS_PROD:
+if IN_PROD:
     ALLOWED_HOSTS.append('134.67.114.3')  # CGI NAT address (mapped to 'qed.epa.gov')
     ALLOWED_HOSTS.append('134.67.114.1')
     ALLOWED_HOSTS.append('134.67.114.5')
