@@ -1,5 +1,6 @@
 #!/bin/bash
-
+echo "Running kube_start.sh"
+export DJANGO_SETTINGS_MODULE="settings_aws_stg"
 django-admin collectstatic --noinput --settings=settings_aws_stg       # "Collect" static files (--noinput executes the command w/o user interaction)
 django-admin migrate auth --noinput --settings=settings_aws_stg           # used for login
 django-admin migrate sessions --noinput --settings=settings_aws_stg       # used for login

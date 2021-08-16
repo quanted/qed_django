@@ -13,7 +13,7 @@ from django.core.wsgi import get_wsgi_application
 if os.environ.get('DJANGO_SETTINGS_FILE'):
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", os.environ.get('DJANGO_SETTINGS_FILE'))
 else:
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings_docker")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings_aws_stg")
 
 # os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings_docker")
 
