@@ -18,7 +18,7 @@ print('settings_aws_stg.py')
 
 ENV_CHECK = bool(os.getenv("ENV_NAME", "") == "kube_dev")
 if not ENV_CHECK:
-    print("Running deployment env setup from settings_kube.py")
+    print("Running deployment env setup from settings_aws_stg.py")
     runtime_env = DeployEnv()
     runtime_env.load_deployment_environment()
 
@@ -240,5 +240,3 @@ else:
         format='%(asctime)s %(levelname)s %(message)s',
     )
 
-for key, val in os.environ.items():
-    logging.info("QED DJANGO ENV VAR: {}: {}".format(key, val))
