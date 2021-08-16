@@ -16,7 +16,7 @@ from temp_config.set_environment import DeployEnv
 
 print('settings_aws_stg.py')
 
-ENV_CHECK = (os.getenv("ENV_NAME", "") == "kube_dev")
+ENV_CHECK = bool(os.getenv("ENV_NAME", "") == "kube_dev")
 if not ENV_CHECK:
     print("Running deployment env setup from settings_kube.py")
     runtime_env = DeployEnv()
@@ -59,15 +59,22 @@ if not os.environ.get('UBERTOOL_REST_SERVER'):
     os.environ.update({'UBERTOOL_REST_SERVER': 'http://qed_nginx:7777'})
     print("REST backend = http://qed_nginx:7777")
 
+d_secret1 = os.path.join(KUBE_ROOT, 'data/django-secrets/secret_key_django_dropbox.txt')
+d_secret2 = os.path.join(KUBE_ROOT, 'secrets/secret_key_django_dropbox.txt')
+if os.path.exists(d_secret2):
+    d_path = d_secret2
+else:
+    d_path = d_secret1
 try:
-    SECRET_KEY = os.getenv('DOCKER_SECRET_KEY', None)
-    if not SECRET_KEY:
-        with open('secrets/secret_key_django_dropbox.txt') as f:
-            SECRET_KEY = f.read().strip()
+    with open(d_path) as f:
+        SECRET_KEY = f.read().strip()
 except IOError as e:
-    print("Secret file not set as env variable")
+    print("Could not find secret file: {}".format(d_path))
     down_low = 'Shhhhhhhhhhhhhhh'
     SECRET_KEY = down_low
+
+if SECRET_KEY == "" or SECRET_KEY is None:
+    SECRET_KEY = os.getenv('SECRET_KEY', "needtosetthesecretkey")
 
 HOSTNAME = os.environ.get('DOCKER_HOSTNAME')
 
