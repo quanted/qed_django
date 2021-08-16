@@ -139,7 +139,7 @@ else:
     ALLOWED_HOSTS.append('qedlinux1stg.aws.epa.gov')
     ALLOWED_HOSTS.append('awqedlinprd.aws.epa.gov')
 
-print("MACHINE_ID = {}".format(MACHINE_ID))
+print("MACHINE_IP = {}".format(MACHINE_IP))
 print("HOSTNAME = {}".format(HOSTNAME))
 print("IS_PUBLIC = {}".format(IS_PUBLIC))
 
