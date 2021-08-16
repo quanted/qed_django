@@ -11,7 +11,6 @@ import socket
 import logging
 from temp_config.set_environment import DeployEnv
 
-
 print('settings_kube.py')
 
 ENV_CHECK = (os.getenv("ENV_NAME", "") == "kube_dev")
@@ -27,7 +26,6 @@ print(f"GitLab AWS: {GL_AWS}")
 if GL_AWS:
     IN_PROD = True
 print("Production Deployment: {}".format(IN_PROD))
-
 
 if IN_PROD:
     DEBUG = False
@@ -51,7 +49,7 @@ print("FLASK SERVER: {}".format(os.environ.get("UBERTOOL_REST_SERVER")))
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 KUBE_ROOT = os.path.abspath(os.path.dirname(__file__)).replace("qed_django", "")
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
-TEMPLATE_ROOT = os.path.join(KUBE_ROOT, 'templates_qed/') #.replace('\\','/'))
+TEMPLATE_ROOT = os.path.join(KUBE_ROOT, 'templates_qed/')  # .replace('\\','/'))
 
 # Get machine IP address
 MACHINE_ID = "developer"
@@ -96,7 +94,7 @@ TEMPLATES = [
             os.path.join(TEMPLATE_ROOT, 'uberqaqc'),
             os.path.join(TEMPLATE_ROOT, 'nta'),
             os.path.join("/src", "collected_static")
-                 ],
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -111,16 +109,16 @@ TEMPLATES = [
 
 # Application definition
 INSTALLED_APPS = (
-    #'cts_api',
-    #'cts_testing',
-    #'crispy_forms',
+    # 'cts_api',
+    # 'cts_testing',
+    # 'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #'mod_wsgi.server',  # Only needed for mod_wsgi express (Python driver for Apache) e.g. on the production server
+    # 'mod_wsgi.server',  # Only needed for mod_wsgi express (Python driver for Apache) e.g. on the production server
     # 'docs',
     # 'rest_framework_swagger',
     'cts_app',  # cts django app
@@ -133,9 +131,9 @@ INSTALLED_APPS = (
     'hwbi_app',  # hwbi django app
     'pisces_app',  # pisces django app
     'pram_app',  # pram django app
-    #'pop_app',  # pop django app
-    #'rest_framework',
-    #'sam_app',  # sam django app
+    # 'pop_app',  # pop django app
+    # 'rest_framework',
+    # 'sam_app',  # sam django app
     'splash_app',  # splash django app
     # 'ubertool_app',  # ubertool django app
     # 'wqt_app',  # ubertool django app
@@ -178,7 +176,6 @@ except IOError as e:
     print("{} not found!".format(s_path))
     DB_PASS = None
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -199,12 +196,12 @@ DATABASES = {
         'PASSWORD': DB_PASS,
         'HOST': os.getenv('PISCES_DB_HOST'),
         'PORT': '5432',
-        #'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        #'NAME': 'pisces',
-        #'USER': 'postgres',
-        #'PASSWORD': 'postgres',
-        #'HOST': 'localhost',
-        #'PORT': '5432',
+        # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        # 'NAME': 'pisces',
+        # 'USER': 'postgres',
+        # 'PASSWORD': 'postgres',
+        # 'HOST': 'localhost',
+        # 'PORT': '5432',
     },
     'cyan_db': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -212,7 +209,8 @@ DATABASES = {
     }
 }
 
-print("Pisces db - user: {}, name: {}, host: {}".format(os.getenv('PISCES_DB_USER'), os.getenv('PISCES_DB_NAME'), os.getenv('PISCES_DB_HOST')))
+print("Pisces db - user: {}, name: {}, host: {}".format(os.getenv('PISCES_DB_USER'), os.getenv('PISCES_DB_NAME'),
+                                                        os.getenv('PISCES_DB_HOST')))
 
 DATABASE_ROUTERS = {'routers.HemRouter',
                     'routers.HwbiRouter',
@@ -242,15 +240,15 @@ USE_TZ = True
 
 CYAN_ANGULAR_APP_DIR = "static_qed/cyan/webapp"
 
-#STATICFILES_DIRS = (
+# STATICFILES_DIRS = (
 #    os.path.join(KUBE_ROOT, 'static_qed'),
 #    #os.path.join(KUBE_ROOT, CYAN_ANGULAR_APP_DIR)
-#)
+# )
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 STATIC_ROOT = os.path.join(KUBE_ROOT, 'static_qed')
@@ -264,6 +262,7 @@ print('TEMPLATE_ROOT = {0!s}'.format(TEMPLATE_ROOT))
 
 DOCS_ROOT = os.path.join(PROJECT_ROOT, 'docs', '_build', 'html')
 DOCS_ACCESS = 'public'
+
 
 # Get local machine IP
 def get_machine_ip():
@@ -290,7 +289,7 @@ NICK_LOCAL = False
 os.environ.update({
     'REST_SERVER_8': 'http://134.67.114.8',  # 'http://localhost:64399'
     'PROJECT_PATH': PROJECT_ROOT,
-    'SITE_SKIN': 'EPA',                          # Leave empty ('') for default skin, 'EPA' for EPA skin
+    'SITE_SKIN': 'EPA',  # Leave empty ('') for default skin, 'EPA' for EPA skin
     'CONTACT_URL': 'https://www.epa.gov/research/forms/contact-us-about-epa-research',
 })
 
@@ -337,12 +336,16 @@ AUTH = False
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Log to console in Debug mode
-DEBUG = True
+DEBUG = (os.getenv("DEBUG", "1") == "1")
 if DEBUG:
-    import logging
     logging.basicConfig(
-        level = logging.DEBUG,
-        format = '%(asctime)s %(levelname)s %(message)s',
+        level=logging.DEBUG,
+        format='%(asctime)s %(levelname)s %(message)s',
+    )
+else:
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s %(levelname)s %(message)s',
     )
 
 if os.environ.get('PASSWORD_REQUIRED') == "True":
