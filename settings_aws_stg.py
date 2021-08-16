@@ -38,8 +38,23 @@ else:
     PASSWORD_REQUIRED = True
     PUBLIC_APPS = ['cts', 'hms', 'pisces', 'cyan', 'pram']
 
-# Get machine IP address
-MACHINE_ID = socket.gethostname()
+# Get local machine IP
+def get_machine_ip():
+    try:
+        _MACHINE_ID = socket.gethostname()
+        _MACHINE_INFO = socket.gethostbyname_ex(_MACHINE_ID)
+        print("Development machine INFO: {}".format(_MACHINE_INFO))
+    except:
+        print("Unable to get machine IP")
+        return None
+    _MACHINE_IP = ""
+    for ip in _MACHINE_INFO[2]:
+        if '192' in ip:
+            _MACHINE_IP = ip
+    return _MACHINE_IP
+
+
+MACHINE_IP = get_machine_ip()
 
 KUBE_ROOT = os.path.abspath(os.path.dirname(__file__)).replace("qed_django", "")
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
