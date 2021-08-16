@@ -24,7 +24,7 @@ if __name__ == "__main__":
 	if os.environ.get('DJANGO_SETTINGS_FILE'):
 		os.environ.setdefault("DJANGO_SETTINGS_MODULE", os.environ.get('DJANGO_SETTINGS_FILE'))
 	else:
-		os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
+		os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings_docker")
 	# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
     # os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings_apache")
 	print(sys.argv)
