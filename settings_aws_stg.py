@@ -79,51 +79,11 @@ except IOError as e:
     print("HOSTNAME address not set as env variable")
     HOSTNAME = 'unknown'
 
-ALLOWED_HOSTS = []
-
-if IS_PROD:
-    ALLOWED_HOSTS.append('134.67.114.3')  # CGI NAT address (mapped to 'qed.epa.gov')
-    ALLOWED_HOSTS.append('134.67.114.1')
-    ALLOWED_HOSTS.append('134.67.114.5')
-    ALLOWED_HOSTS.append('172.20.100.11')
-    ALLOWED_HOSTS.append('172.20.100.13')
-    ALLOWED_HOSTS.append('172.20.100.15')
-    ALLOWED_HOSTS.append('qed.epa.gov')
-    ALLOWED_HOSTS.append('qed.edap-cluster.com')
-    ALLOWED_HOSTS.append('ceamdev.ddns.net')
-    ALLOWED_HOSTS.append('ceamstg.ddns.net')
-    ALLOWED_HOSTS.append('ceamdev.ceeopdev.net')
-    ALLOWED_HOSTS.append('ceamstg.ceeopdev.net')
-    ALLOWED_HOSTS.append('qedlinux1dev.aws.epa.gov')
-    ALLOWED_HOSTS.append('qedlinux1stg.aws.epa.gov')
-    ALLOWED_HOSTS.append('awqedlinprd.aws.epa.gov')
-elif HOSTNAME == "UberTool-Dev":
-    ALLOWED_HOSTS.append('172.16.0.4')
-    ALLOWED_HOSTS.append('qed.epacdx.net')
-else:
-    ALLOWED_HOSTS.append('localhost')
-    ALLOWED_HOSTS.append('127.0.0.1')
-    ALLOWED_HOSTS.append('host.docker.internal')
-    ALLOWED_HOSTS.append('192.168.99.100')  # Docker Machine IP (generally, when using VirtualBox VM)
-    ALLOWED_HOSTS.append('134.67.114.3')  # CGI NAT address (mapped to 'qed.epa.gov')
-    ALLOWED_HOSTS.append('134.67.114.1')
-    ALLOWED_HOSTS.append('134.67.114.5')
-    ALLOWED_HOSTS.append('172.20.100.11')
-    ALLOWED_HOSTS.append('172.20.100.13')
-    ALLOWED_HOSTS.append('172.20.100.15')
-    ALLOWED_HOSTS.append('qedinternal.epa.gov')
-    ALLOWED_HOSTS.append('qed.epa.gov')
-    ALLOWED_HOSTS.append('qedinternalblue.edap-cluster.com')
-    ALLOWED_HOSTS.append('qedinternal.edap-cluster.com')
-    ALLOWED_HOSTS.append('qed.edap-cluster.com')
-    ALLOWED_HOSTS.append('qedblue.edap-cluster.com')
-    ALLOWED_HOSTS.append('ceamdev.ddns.net')
-    ALLOWED_HOSTS.append('ceamstg.ddns.net')
-    ALLOWED_HOSTS.append('ceamdev.ceeopdev.net')
-    ALLOWED_HOSTS.append('ceamstg.ceeopdev.net')
-    ALLOWED_HOSTS.append('qedlinux1dev.aws.epa.gov')
-    ALLOWED_HOSTS.append('qedlinux1stg.aws.epa.gov')
-    ALLOWED_HOSTS.append('awqedlinprd.aws.epa.gov')
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '*'
+]
 
 print("MACHINE_ID = {}".format(MACHINE_ID))
 print("HOSTNAME = {}".format(HOSTNAME))
