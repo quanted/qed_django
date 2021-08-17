@@ -25,6 +25,17 @@ TEMPLATE_ROOT = os.path.join(PROJECT_ROOT, 'templates_qed/') #.replace('\\','/')
 #STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static_qed')
 #os.path.join(PROJECT_ROOT, 'templates_qed')
 
+try:
+    SECRET_KEY = os.getenv('DOCKER_SECRET_KEY', None)
+    if not SECRET_KEY:
+        with open('secrets/secret_key_django_dropbox.txt') as f:
+            SECRET_KEY = f.read().strip()
+except IOError as e:
+    print("Secret file not set as env variable or file")
+    down_low = 'Shhhhhhhhhhhhhhh'
+    SECRET_KEY = down_low
+
+
 # cts_api addition:
 NODEJS_HOST = 'nginx'  # default nodejs hostname
 NODEJS_PORT = 80  # default nodejs port

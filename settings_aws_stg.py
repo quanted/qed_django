@@ -66,7 +66,7 @@ try:
         with open('secrets/secret_key_django_dropbox.txt') as f:
             SECRET_KEY = f.read().strip()
 except IOError as e:
-    print("Secret file not set as env variable")
+    print("Secret file not set as env variable or file")
     down_low = 'Shhhhhhhhhhhhhhh'
     SECRET_KEY = down_low
 
