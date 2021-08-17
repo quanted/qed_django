@@ -11,18 +11,16 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import logging
 import os
 import socket
+from settings import *
 from temp_config.set_environment import DeployEnv
 
+# Determine env vars to use:
+runtime_env = DeployEnv()
+runtime_env.load_deployment_environment()
 
 print('settings_aws_stg.py')
 
-ENV_CHECK = bool(os.getenv("ENV_NAME", "") == "kube_dev")
-if not ENV_CHECK:
-    print("Running deployment env setup from settings_aws_stg.py")
-    runtime_env = DeployEnv()
-    runtime_env.load_deployment_environment()
-
-IN_PROD = bool(os.getenv("IN_PROD") == "1")
+IN_PROD = (os.getenv("IN_PROD") == "1")
 print("Production Deployment: {}".format(IN_PROD))
 if IN_PROD:
     DEBUG = False
@@ -38,27 +36,11 @@ else:
     PASSWORD_REQUIRED = True
     PUBLIC_APPS = ['cts', 'hms', 'pisces', 'cyan', 'pram']
 
-# Get local machine IP
-def get_machine_ip():
-    try:
-        _MACHINE_ID = socket.gethostname()
-        _MACHINE_INFO = socket.gethostbyname_ex(_MACHINE_ID)
-        print("Development machine INFO: {}".format(_MACHINE_INFO))
-    except:
-        print("Unable to get machine IP")
-        return None
-    _MACHINE_IP = ""
-    for ip in _MACHINE_INFO[2]:
-        if '192' in ip:
-            _MACHINE_IP = ip
-    return _MACHINE_IP
+# Get machine IP address
+MACHINE_ID = socket.gethostname()
 
-
-MACHINE_IP = get_machine_ip()
-
-KUBE_ROOT = os.path.abspath(os.path.dirname(__file__)).replace("qed_django", "")
-PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
-TEMPLATE_ROOT = os.path.join(KUBE_ROOT, 'templates_qed/')  # .replace('\\','/'))
+for key, val in os.environ.items():
+    logging.info("QED DJANGO ENV VAR: {}: {}".format(key, val))
 
 # Define ENVIRONMENTAL VARIABLES for project (replaces the app.yaml)
 os.environ.update({
@@ -71,31 +53,35 @@ os.environ.update({
 TEMPLATE_DEBUG = False
 
 if not os.environ.get('UBERTOOL_REST_SERVER'):
+    # Docker network
     os.environ.update({'UBERTOOL_REST_SERVER': 'http://qed_nginx:7777'})
     print("REST backend = http://qed_nginx:7777")
 
-d_secret1 = os.path.join(KUBE_ROOT, 'data/django-secrets/secret_key_django_dropbox.txt')
-d_secret2 = os.path.join(KUBE_ROOT, 'secrets/secret_key_django_dropbox.txt')
-if os.path.exists(d_secret2):
-    d_path = d_secret2
-else:
-    d_path = d_secret1
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
+# SECURITY WARNING: keep the secret key used in production secret!
 try:
-    with open(d_path) as f:
-        SECRET_KEY = f.read().strip()
+    SECRET_KEY = os.getenv('DOCKER_SECRET_KEY', None)
+    if not SECRET_KEY:
+        with open('secrets/secret_key_django_dropbox.txt') as f:
+            SECRET_KEY = f.read().strip()
 except IOError as e:
-    print("Could not find secret file: {}".format(d_path))
+    print("Secret file not set as env variable")
     down_low = 'Shhhhhhhhhhhhhhh'
     SECRET_KEY = down_low
 
-if SECRET_KEY == "" or SECRET_KEY is None:
-    SECRET_KEY = os.getenv('SECRET_KEY', "needtosetthesecretkey")
-
-HOSTNAME = os.environ.get('DOCKER_HOSTNAME')
+try:
+    HOSTNAME = os.environ.get('DOCKER_HOSTNAME')
+    #IS_PUBLIC = (os.environ.get('IS_PUBLIC') == "True")
+    # with open('secret_key_django_dropbox.txt') as f:
+    #        SECRET_KEY = f.read().strip()
+except IOError as e:
+    print("HOSTNAME address not set as env variable")
+    HOSTNAME = 'unknown'
 
 ALLOWED_HOSTS = []
 
-if IN_PROD:
+if IS_PROD:
     ALLOWED_HOSTS.append('134.67.114.3')  # CGI NAT address (mapped to 'qed.epa.gov')
     ALLOWED_HOSTS.append('134.67.114.1')
     ALLOWED_HOSTS.append('134.67.114.5')
@@ -139,7 +125,7 @@ else:
     ALLOWED_HOSTS.append('qedlinux1stg.aws.epa.gov')
     ALLOWED_HOSTS.append('awqedlinprd.aws.epa.gov')
 
-print("MACHINE_IP = {}".format(MACHINE_IP))
+print("MACHINE_ID = {}".format(MACHINE_ID))
 print("HOSTNAME = {}".format(HOSTNAME))
 print("IS_PUBLIC = {}".format(IS_PUBLIC))
 
@@ -183,6 +169,7 @@ else:
         'splash_app',  # splash django app
     )
 
+
 MIDDLEWARE_CLASSES = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -192,7 +179,24 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = __name__
+ROOT_URLCONF=__name__, #rollbar
+
+ROLLBAR = {
+    'access_token': 'b626ac6c59744e5ba7ddd088a0075893',
+    # 'environment': 'development', # if DEBUG else 'production',
+    'environment': 'production',
+    'branch': 'master',
+    'root': '/var/www/qed',
+}
+
+ROLLBAR = {
+    'access_token': 'POST_SERVER_ITEM_ACCESS_TOKEN',
+    'environment': 'production',
+    'branch': 'master',
+    'root': os.getcwd()
+}
+
+ROOT_URLCONF = 'urls'
 
 WSGI_APPLICATION = 'wsgi_docker.application'
 
@@ -204,12 +208,13 @@ AUTH = False
 # Note: env vars in os.environ always strings..
 if PASSWORD_REQUIRED:
     logging.warning("Password protection enabled")
-    MIDDLEWARE_CLASSES += [
+    MIDDLEWARE += [
         'login_middleware.RequireLoginMiddleware',
         'login_middleware.Http403Middleware',
         'django.contrib.messages.middleware.MessageMiddleware',
     ]
     AUTH = True
+    # DEBUG = False
 
 REQUIRE_LOGIN_PATH = '/login/'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -227,6 +232,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+# STATIC_ROOT = os.path.join('src', 'collected_static')
 STATIC_ROOT = os.path.join('collected_static')
 HMS_ANGULAR_APP_DIR = "/src/static_qed/hms/webapp"
 HMS_ANGULAR_APP_ASSETS_DIR = "/src/static_qed/hms/webapp/assets"
@@ -235,13 +241,12 @@ CYANWEB_ANGULAR_APP_DIR = "/src/static_qed/epa-cyano-web"
 STATICFILES_DIRS = (
     os.path.join(PROJECT_ROOT, 'static_qed'),
 )
-print(f"Staticfiles: {STATICFILES_DIRS}")
-
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 STATIC_URL = '/static_qed/'
+print(f"Staticfiles: {STATICFILES_DIRS}")
 
 # Log to console in Debug mode
 if DEBUG:
@@ -254,4 +259,3 @@ else:
         level=logging.INFO,
         format='%(asctime)s %(levelname)s %(message)s',
     )
-
