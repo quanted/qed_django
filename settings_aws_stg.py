@@ -13,13 +13,17 @@ import os
 import socket
 from settings import *
 from temp_config.set_environment import DeployEnv
+from django.utils.crypto import get_random_string
 
 # Determine env vars to use:
 runtime_env = DeployEnv()
 runtime_env.load_deployment_environment()
 
 print('settings_aws_stg.py')
-SECRET_KEY = "emptysecretkey"
+
+chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
+SECRET_KEY = get_random_string(50, chars)
+print(f"SECRET_KEY: {SECRET_KEY}")
 
 IN_PROD = (os.getenv("IN_PROD") == "1")
 print("Production Deployment: {}".format(IN_PROD))
@@ -61,15 +65,15 @@ if not os.environ.get('UBERTOOL_REST_SERVER'):
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 # SECURITY WARNING: keep the secret key used in production secret!
-try:
-    SECRET_KEY = os.getenv('DOCKER_SECRET_KEY', None)
-    if not SECRET_KEY:
-        with open('secrets/secret_key_django_dropbox.txt') as f:
-            SECRET_KEY = f.read().strip()
-except IOError as e:
-    print("Secret file not set as env variable or file")
-    down_low = 'Shhhhhhhhhhhhhhh'
-    SECRET_KEY = down_low
+# try:
+#     SECRET_KEY = os.getenv('DOCKER_SECRET_KEY', None)
+#     if not SECRET_KEY:
+#         with open('secrets/secret_key_django_dropbox.txt') as f:
+#             SECRET_KEY = f.read().strip()
+# except IOError as e:
+#     print("Secret file not set as env variable or file")
+#     down_low = 'Shhhhhhhhhhhhhhh'
+#     SECRET_KEY = down_low
 
 try:
     HOSTNAME = os.environ.get('DOCKER_HOSTNAME')

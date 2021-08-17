@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 import logging
+from django.utils.crypto import get_random_string
 from temp_config.set_environment import DeployEnv
 
 # Determine env vars to use:
@@ -24,16 +25,20 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 TEMPLATE_ROOT = os.path.join(PROJECT_ROOT, 'templates_qed/') #.replace('\\','/'))
 #STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static_qed')
 #os.path.join(PROJECT_ROOT, 'templates_qed')
-SECRET_KEY = "emptysecretkey"
-try:
-    SECRET_KEY = os.getenv('DOCKER_SECRET_KEY', None)
-    if not SECRET_KEY:
-        with open('secrets/secret_key_django_dropbox.txt') as f:
-            SECRET_KEY = f.read().strip()
-except IOError as e:
-    print("Secret file not set as env variable or file")
-    down_low = 'Shhhhhhhhhhhhhhh'
-    SECRET_KEY = down_low
+
+chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
+SECRET_KEY = get_random_string(50, chars)
+print(f"SECRET_KEY: {SECRET_KEY}")
+
+# try:
+#     SECRET_KEY = os.getenv('DOCKER_SECRET_KEY', None)
+#     if not SECRET_KEY:
+#         with open('secrets/secret_key_django_dropbox.txt') as f:
+#             SECRET_KEY = f.read().strip()
+# except IOError as e:
+#     print("Secret file not set as env variable or file")
+#     down_low = 'Shhhhhhhhhhhhhhh'
+#     SECRET_KEY = down_low
 
 
 # cts_api addition:
