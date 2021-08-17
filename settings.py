@@ -24,7 +24,7 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 TEMPLATE_ROOT = os.path.join(PROJECT_ROOT, 'templates_qed/') #.replace('\\','/'))
 #STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static_qed')
 #os.path.join(PROJECT_ROOT, 'templates_qed')
-
+SECRET_KEY = "emptysecretkey"
 try:
     SECRET_KEY = os.getenv('DOCKER_SECRET_KEY', None)
     if not SECRET_KEY:

@@ -19,6 +19,7 @@ runtime_env = DeployEnv()
 runtime_env.load_deployment_environment()
 
 print('settings_aws_stg.py')
+SECRET_KEY = "emptysecretkey"
 
 IN_PROD = (os.getenv("IN_PROD") == "1")
 print("Production Deployment: {}".format(IN_PROD))
