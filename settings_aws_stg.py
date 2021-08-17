@@ -25,7 +25,7 @@ chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
 SECRET_KEY = get_random_string(50, chars)
 print(f"SECRET_KEY: {SECRET_KEY}")
 
-IN_PROD = (os.getenv("IN_PROD") == "1")
+IN_PROD = bool(os.getenv("IN_PROD", "1") == "1")
 print("Production Deployment: {}".format(IN_PROD))
 if IN_PROD:
     DEBUG = False
