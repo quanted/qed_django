@@ -25,7 +25,9 @@ chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
 SECRET_KEY = get_random_string(50, chars)
 print(f"SECRET_KEY: {SECRET_KEY}")
 
-IN_PROD = bool(os.getenv("IN_PROD", "1") == "1")
+GL_AWS = bool(os.getenv("GL_AWS", "0") == "1")
+print(f"EPA-AWS: {GL_AWS}")
+IN_PROD = bool(os.getenv("IN_PROD", "1") == "1") if not GL_AWS else True
 print("Production Deployment: {}".format(IN_PROD))
 if IN_PROD:
     DEBUG = False
