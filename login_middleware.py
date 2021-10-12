@@ -56,7 +56,7 @@ class RequireLoginMiddleware:
         self.hms_admin = "hmsadmin"
         self.hms_username = "hmsuser"
         self.hashed_pass = {}  # dictionary of user:passwords
-        self.apps_with_password = ["hms", "pram", "cts/biotrans", "cts/stress", "cyanweb"]
+        self.apps_with_password = ["hms", "pram", "cts/biotrans", "cts/stress"]
         self.hms_protected = ["hydrology", "workflow", "meteorology"]
         self.hms_public = [
             "workflow/precip_data_extraction/",
@@ -67,7 +67,7 @@ class RequireLoginMiddleware:
         self.open_endpoints = [
             "rest/api/"
         ]
-        self.set_password_via_config()
+        self.set_password_via_env()
         self.load_passwords()
 
     def __call__(self, request):
@@ -90,7 +90,7 @@ class RequireLoginMiddleware:
             elif "cyanweb" in a:
                 self.hashed_pass["qed"] = self.get_hashed_password("secret_key_login.txt")
 
-    def set_password_via_config(self):
+    def set_password_via_env(self):
         """
         Modifies apps_with_password list based on deployment environment.
         Used for fine-tuning passwords on apps on a server-by-server basis.
@@ -99,8 +99,14 @@ class RequireLoginMiddleware:
         if not env_name:
             return
         if env_name == 'gdit_aws_dev':
-            if "cts" not in self.apps_with_password:
-                self.apps_with_password.append("cts")  # adds password for all of cts on gdit aws dev server
+            self.add_to_password_list("cts")
+            self.add_to_password_list("cyanweb")
+        elif env_name == 'gdit_aws_stg':
+            self.add_to_password_list("cyanweb")
+
+    def add_to_password_list(self, app_name):
+        if app_name not in self.apps_with_password:
+                self.apps_with_password.append(app_name)  # adds password for cyanweb on gdit aws dev server        
 
     def get_hashed_password(self, filename):
         """
@@ -146,7 +152,7 @@ class RequireLoginMiddleware:
             return
 
         # Check that user is autheniticated for the page its trying to access
-        ispublic = bool(os.getenv("HMS_RELEASE", 0))
+        ispublic = (os.getenv("HMS_RELEASE") == "1")
         if has_access is False:
             if 'hms' in redirect_path or 'hms' in path:
                 if ispublic:
@@ -206,12 +212,11 @@ class RequireLoginMiddleware:
 
     def handle_hms_endpoint_login(self, username, password, next_page):
         # check if username is correct:
-        if username != self.hms_admin or username != self.hms_username:
+        if username != self.hms_admin:
             logger.info("username {} incorrect..".format(username))
             return True
         # check if password is correct:
-        if not bcrypt.checkpw(password.encode('utf-8'), self.hashed_pass["hms_private"]) or \
-                not bcrypt.checkpw(password.encode('utf-8'), self.hashed_pass["hms_public"]):
+        if not bcrypt.checkpw(password.encode('utf-8'), self.hashed_pass["hms_private"]):
             logger.info("password incorrect for user: {}".format(username))
             return True
         return False
@@ -234,19 +239,21 @@ class RequireLoginMiddleware:
         next_page = request.POST.get('next')
 
         if self.hashed_pass is None:
-            self.set_password_via_config()
+            self.set_password_via_env()
             self.load_passwords()
 
         # redirect if hashed pw unable to be set, or user didn't enter password:
         if not self.hashed_pass or not password:
             logger.info("login_auth 1, no password or hashed_pass is not set. Redirecting to login page.")
             return redirect('/login?next={}'.format(next_page))
-        show_login = False
+
+        show_login = True
         # Checks if username and password is correct:
         if not any(endpoint in next_page for endpoint in hms_pass):
-            # show_login = self.handle_public_hms_endpoint_login(username, password, next_page)
             if show_login:
                 show_login = self.handle_hms_endpoint_login(username, password, next_page)
+                if show_login:
+                    show_login = self.handle_public_hms_endpoint_login(username, password, next_page)
             if show_login:
                 show_login = self.handle_site_wide_login(username, password, next_page)
         logger.info("login_auth 1, username: {}, next_page: {}, show_login: {}".format(username, next_page, show_login))
@@ -261,7 +268,6 @@ class RequireLoginMiddleware:
             _user.save()  # save username and plain pass to django db
 
         user = authenticate(request, username=username, password=password)  # auths, then returns user obj (too redundant)
-
         if user is not None:
             if user.is_active:
                 logger.info("login_auth 3, user is active, redirecting to next_page: {}".format(next_page))
