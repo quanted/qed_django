@@ -249,7 +249,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-STATIC_ROOT = os.path.join(KUBE_ROOT, 'static_qed')
+STATIC_ROOT = os.path.join(KUBE_ROOT, 'collected_static')
 
 STATIC_URL = '/static_qed/'
 print('PROJECT_ROOT = {0!s}'.format(PROJECT_ROOT))
