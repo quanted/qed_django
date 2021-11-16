@@ -1,7 +1,7 @@
 # qed_py3 is debian linux with buildpack-deps
 # updated with all needed qed python dependencies
 # lite version contains no GDAL or anaconda installation
-FROM quanted/qed_py3:lite-3.8
+FROM dbsmith88/qed_py3:lite-3.8
 
 # Overwrite the uWSGI config
 COPY uwsgi.ini /etc/uwsgi/
