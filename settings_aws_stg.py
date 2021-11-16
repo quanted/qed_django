@@ -20,6 +20,9 @@ runtime_env = DeployEnv()
 runtime_env.load_deployment_environment()
 
 print('settings_aws_stg.py')
+KUBE_ROOT = os.path.abspath(os.path.dirname(__file__)).replace("qed_django", "")
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+TEMPLATE_ROOT = os.path.join(KUBE_ROOT, 'templates_qed/')  # .replace('\\','/'))
 
 chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
 SECRET_KEY = get_random_string(50, chars)
