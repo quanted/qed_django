@@ -217,7 +217,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.getenv('PISCES_DB_NAME'),
         'USER': os.getenv('PISCES_DB_USER'),
-        'PASSWORD': postgres,
+        'PASSWORD': "postgres",
         'HOST': os.getenv('PISCES_DB_HOST'),
         'PORT': '5432',
     },
