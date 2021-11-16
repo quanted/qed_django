@@ -186,6 +186,29 @@ if PASSWORD_REQUIRED:
 REQUIRE_LOGIN_PATH = '/login/'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(PROJECT_ROOT, 'db.sqlite3'),
+    },
+    'hem_db': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(PROJECT_ROOT, 'hem_app/hem_db.sqlite3'),
+    },
+    'pisces_db': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('PISCES_DB_NAME'),
+        'USER': os.getenv('PISCES_DB_USER'),
+        'PASSWORD': DB_PASS,
+        'HOST': os.getenv('PISCES_DB_HOST'),
+        'PORT': '5432',
+    },
+    'cyan_db': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(PROJECT_ROOT, 'cyan_app/cyan_web_app_db.sqlite3')
+    }
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
