@@ -189,20 +189,20 @@ if PASSWORD_REQUIRED:
 REQUIRE_LOGIN_PATH = '/login/'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
-secrets_path2 = os.path.join(KUBE_ROOT, 'data/django-secrets/secret_key_database.txt')
-secrets_path1 = os.path.join(KUBE_ROOT, 'secrets/secret_key_database.txt')
+# secrets_path2 = os.path.join(KUBE_ROOT, 'data/django-secrets/secret_key_database.txt')
+# secrets_path1 = os.path.join(KUBE_ROOT, 'secrets/secret_key_database.txt')
 
-if os.path.exists(secrets_path1):
-    s_path = secrets_path1
-else:
-    s_path = secrets_path2
-print(f"DB_PASS PATH: {s_path}")
-try:
-    with open(s_path) as f:
-        DB_PASS = f.read().strip()
-except IOError as e:
-    print("{} not found!".format(s_path))
-    DB_PASS = None
+# if os.path.exists(secrets_path1):
+#     s_path = secrets_path1
+# else:
+#     s_path = secrets_path2
+# print(f"DB_PASS PATH: {s_path}")
+# try:
+#     with open(s_path) as f:
+#         DB_PASS = f.read().strip()
+# except IOError as e:
+#     print("{} not found!".format(s_path))
+#     DB_PASS = None
 
 DATABASES = {
     'default': {
@@ -217,7 +217,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.getenv('PISCES_DB_NAME'),
         'USER': os.getenv('PISCES_DB_USER'),
-        'PASSWORD': DB_PASS,
+        'PASSWORD': os.getenv('PISCES_DB_PASS'),
         'HOST': os.getenv('PISCES_DB_HOST'),
         'PORT': '5432',
     },
