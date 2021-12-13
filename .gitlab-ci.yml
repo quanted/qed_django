@@ -24,6 +24,24 @@ Prisma:
   # This needs a TwistCLI image based on a Docker base image.
   script:
     - echo "Simulate a Prisma scan."
+    
+prisma-cloud-compute-scan:
+  stage: Image Scan
+  extends:
+    - .pcs_compute_scan
+  tags:
+    - twistcli
+  when: manual
+  allow_failure: false
+  variables:
+      prisma_cloud_scan_image: "registry.epa.gov/qed/qed-django:dev_kube"
+      prisma_cloud_compute_url: "https://prismacloud.gitlab-prod.aws.epa.gov"
+      GIT_STRATEGY: clone
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.epa.gov
+    - docker pull $prisma_cloud_scan_image
+    - ./image_scan.sh  
+
 
 NetSparker:
   stage: Application Scan
