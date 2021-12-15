@@ -245,9 +245,11 @@ STATIC_ROOT = os.path.join('collected_static')
 HMS_ANGULAR_APP_DIR = "/src/static_qed/hms/webapp"
 HMS_ANGULAR_APP_ASSETS_DIR = "/src/static_qed/hms/webapp/assets"
 CYANWEB_ANGULAR_APP_DIR = "/src/static_qed/epa-cyano-web"
+CTS_STATIC_ROOT = "/src/cts_app/static/cts_app"
 
 STATICFILES_DIRS = (
     os.path.join(PROJECT_ROOT, 'static_qed'),
+    CTS_STATIC_ROOT
 )
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
