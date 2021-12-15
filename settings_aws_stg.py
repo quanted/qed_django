@@ -249,7 +249,7 @@ CTS_STATIC_ROOT = "/src/cts_app/static/cts_app"
 
 STATICFILES_DIRS = (
     os.path.join(PROJECT_ROOT, 'static_qed'),
-    CTS_STATIC_ROOT
+    os.path.join(PROJECT_ROOT, 'cts_app', 'static', 'cts_app')
 )
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
