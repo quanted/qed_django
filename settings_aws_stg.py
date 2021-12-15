@@ -241,7 +241,8 @@ USE_L10N = True
 USE_TZ = True
 
 # STATIC_ROOT = os.path.join('src', 'collected_static')
-STATIC_ROOT = os.path.join('collected_static')
+# STATIC_ROOT = os.path.join('collected_static')
+STATIC_ROOT = os.path.join('static_qed')
 HMS_ANGULAR_APP_DIR = "/src/static_qed/hms/webapp"
 HMS_ANGULAR_APP_ASSETS_DIR = "/src/static_qed/hms/webapp/assets"
 CYANWEB_ANGULAR_APP_DIR = "/src/static_qed/epa-cyano-web"
